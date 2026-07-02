@@ -1,0 +1,83 @@
+<div class="topnav"><a class="retour" routerLink="/">← Accueil</a></div>
+
+<div class="classique">
+  <div class="entete">
+    <h1>🎴 Classique</h1>
+    <div class="solde">
+      <div class="eco"><b>{{ bankroll() }}</b><span>JETONS</span></div>
+      <button class="sec" (click)="reset()">Réinitialiser</button>
+    </div>
+  </div>
+
+  <!-- Croupier -->
+  <div class="zone">
+    <div class="zone-titre">
+      Croupier
+      @if (dealer().length) {
+        <span class="badge">{{ revealed() ? dealerValue() : '?' }}</span>
+      }
+    </div>
+    <div class="cartes">
+      @for (c of dealer(); track $index) {
+        @if (!revealed() && $index === 0) {
+          <div class="carte dos"></div>
+        } @else {
+          <div class="carte" [class.rouge]="red(c)" [class.noir]="!red(c)">
+            <span class="r">{{ c.rank }}</span>
+            <span class="c">{{ c.suit }}</span>
+            <span class="s">{{ c.suit }}</span>
+          </div>
+        }
+      }
+    </div>
+  </div>
+
+  <div class="message">{{ message() }}</div>
+
+  <!-- Joueur -->
+  <div class="zone">
+    <div class="zone-titre">
+      Vous
+      @if (player().length) {
+        <span class="badge">{{ playerValue() }}</span>
+      }
+    </div>
+    <div class="cartes">
+      @for (c of player(); track $index) {
+        <div class="carte" [class.rouge]="red(c)" [class.noir]="!red(c)">
+          <span class="r">{{ c.rank }}</span>
+          <span class="c">{{ c.suit }}</span>
+          <span class="s">{{ c.suit }}</span>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Contrôles -->
+  <div class="controles">
+    @switch (phase()) {
+      @case ('bet') {
+        <div class="jetons">
+          @for (v of chips; track v) {
+            <button class="jeton" (click)="addBet(v)" [disabled]="bankroll() < v">{{ v }}</button>
+          }
+        </div>
+        <span class="mise">Mise : <b>{{ bet() }}</b></span>
+        <button class="sec" (click)="clearBet()">Effacer</button>
+        <button (click)="deal()" [disabled]="bet() <= 0">Distribuer</button>
+      }
+      @case ('player') {
+        <button (click)="hit()">Tirer</button>
+        <button (click)="stand()">Rester</button>
+        <button (click)="double()" [disabled]="!canDouble()">Doubler</button>
+      }
+      @case ('done') {
+        <button (click)="newRound()">Nouvelle donne</button>
+      }
+    }
+  </div>
+
+  @if (hint()) {
+    <div class="hint">Conseil (stratégie de base) : <b>{{ hint() }}</b></div>
+  }
+</div>
