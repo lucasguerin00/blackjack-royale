@@ -3,7 +3,13 @@ import { RouterLink } from '@angular/router';
 import { Card, Outcome } from '../../core/models/card.model';
 import { BlackjackPayout, Settings } from '../../core/models/game.model';
 import {
-  Shoe, handValue, isBlackjack, isRed, rankValue, recommend, actionLabel,
+  Shoe,
+  handValue,
+  isBlackjack,
+  isRed,
+  rankValue,
+  recommend,
+  actionLabel,
 } from '../../core/engine';
 import { StatsService } from '../../core/services/stats.service';
 import { ProgressionService } from '../../core/services/progression.service';
@@ -68,12 +74,20 @@ export class Classique implements OnDestroy {
     emoji: ['🎉', '✨', '💛', '🃏', '💎', '🎊'][i % 6],
   }));
 
-  protected readonly activeHand = computed<Hand | undefined>(() => this.hands()[this.activeIndex()]);
+  protected readonly activeHand = computed<Hand | undefined>(
+    () => this.hands()[this.activeIndex()],
+  );
   protected readonly dealerValue = computed(() => handValue(this.dealer()).total);
 
-  protected handTotal(h: Hand): number { return handValue(h.cards).total; }
-  protected isSoft(h: Hand): boolean { return handValue(h.cards).soft; }
-  protected red(c: Card): boolean { return isRed(c.suit); }
+  protected handTotal(h: Hand): number {
+    return handValue(h.cards).total;
+  }
+  protected isSoft(h: Hand): boolean {
+    return handValue(h.cards).soft;
+  }
+  protected red(c: Card): boolean {
+    return isRed(c.suit);
+  }
 
   protected readonly insuranceCost = computed(() => Math.floor((this.hands()[0]?.bet ?? 0) / 2));
 
@@ -116,7 +130,9 @@ export class Classique implements OnDestroy {
     this.pendingBet.update((b) => b + v);
     this.sound.chip();
   }
-  protected clearBet(): void { this.pendingBet.set(0); }
+  protected clearBet(): void {
+    this.pendingBet.set(0);
+  }
 
   protected deal(): void {
     const bet = this.pendingBet();
@@ -125,10 +141,16 @@ export class Classique implements OnDestroy {
     this.progression.setBankroll(this.bankroll() - bet);
     this.sound.chip();
 
-    this.hands.set([{
-      cards: [this.shoe.draw(), this.shoe.draw()],
-      bet, doubled: false, surrendered: false, fromSplit: false, done: false,
-    }]);
+    this.hands.set([
+      {
+        cards: [this.shoe.draw(), this.shoe.draw()],
+        bet,
+        doubled: false,
+        surrendered: false,
+        fromSplit: false,
+        done: false,
+      },
+    ]);
     this.dealer.set([this.shoe.draw(), this.shoe.draw()]);
     this.activeIndex.set(0);
     this.insuranceBet.set(0);
@@ -168,7 +190,10 @@ export class Classique implements OnDestroy {
     if (this.insuranceBet() > 0 && dealerBJ) {
       this.progression.setBankroll(this.bankroll() + this.insuranceBet() * 3);
     }
-    if (dealerBJ) { this.settle(); return; }
+    if (dealerBJ) {
+      this.settle();
+      return;
+    }
     if (isBlackjack(this.hands()[0].cards)) {
       this.patchHand(0, { done: true });
       this.settle();
@@ -184,7 +209,10 @@ export class Classique implements OnDestroy {
     if (this.phase() !== 'player') return;
     const i = this.activeIndex();
     this.addCard(i, this.shoe.draw());
-    if (this.handTotal(this.hands()[i]) >= 21) { this.patchHand(i, { done: true }); this.advance(); }
+    if (this.handTotal(this.hands()[i]) >= 21) {
+      this.patchHand(i, { done: true });
+      this.advance();
+    }
   }
 
   protected stand(): void {
@@ -202,9 +230,13 @@ export class Classique implements OnDestroy {
     this.sound.chip();
     const card = this.shoe.draw();
     this.sound.card();
-    this.hands.update((hs) => hs.map((hh, idx) =>
-      idx === i ? { ...hh, bet: hh.bet * 2, doubled: true, cards: [...hh.cards, card], done: true } : hh,
-    ));
+    this.hands.update((hs) =>
+      hs.map((hh, idx) =>
+        idx === i
+          ? { ...hh, bet: hh.bet * 2, doubled: true, cards: [...hh.cards, card], done: true }
+          : hh,
+      ),
+    );
     this.advance();
   }
 
@@ -215,14 +247,31 @@ export class Classique implements OnDestroy {
     this.progression.setBankroll(this.bankroll() - h.bet);
     this.sound.chip();
     const aces = rankValue(h.cards[0].rank) === 11;
-    const handA: Hand = { ...h, cards: [h.cards[0], this.shoe.draw()], fromSplit: true, doubled: false, done: aces };
+    const handA: Hand = {
+      ...h,
+      cards: [h.cards[0], this.shoe.draw()],
+      fromSplit: true,
+      doubled: false,
+      done: aces,
+    };
     const handB: Hand = {
-      cards: [h.cards[1], this.shoe.draw()], bet: h.bet,
-      doubled: false, surrendered: false, fromSplit: true, done: aces,
+      cards: [h.cards[1], this.shoe.draw()],
+      bet: h.bet,
+      doubled: false,
+      surrendered: false,
+      fromSplit: true,
+      done: aces,
     };
     this.sound.card();
-    this.hands.update((hs) => { const copy = [...hs]; copy.splice(i, 1, handA, handB); return copy; });
-    if (aces || this.handTotal(handA) >= 21) { this.patchHand(i, { done: true }); this.advance(); }
+    this.hands.update((hs) => {
+      const copy = [...hs];
+      copy.splice(i, 1, handA, handB);
+      return copy;
+    });
+    if (aces || this.handTotal(handA) >= 21) {
+      this.patchHand(i, { done: true });
+      this.advance();
+    }
   }
 
   protected surrender(): void {
@@ -239,11 +288,15 @@ export class Classique implements OnDestroy {
     const next = hs.findIndex((h, idx) => idx > this.activeIndex() && !h.done);
     if (next !== -1) {
       this.activeIndex.set(next);
-      if (this.handTotal(hs[next]) >= 21) { this.patchHand(next, { done: true }); this.advance(); }
+      if (this.handTotal(hs[next]) >= 21) {
+        this.patchHand(next, { done: true });
+        this.advance();
+      }
       return;
     }
     const anyLive = this.hands().some((h) => !h.surrendered && this.handTotal(h) <= 21);
-    if (anyLive) this.dealerPlay(); else this.settle();
+    if (anyLive) this.dealerPlay();
+    else this.settle();
   }
 
   private dealerPlay(): void {
@@ -270,26 +323,44 @@ export class Classique implements OnDestroy {
     const dealerBJ = isBlackjack(this.dealer());
     const dv = handValue(this.dealer()).total;
     let net = 0;
-    let win = false, bj = false, loss = false;
+    let win = false,
+      bj = false,
+      loss = false;
 
     const settled = this.hands().map((h) => {
       const pv = this.handTotal(h);
       const pBJ = !h.fromSplit && h.cards.length === 2 && pv === 21;
       let outcome: Outcome;
       let payout = 0;
-      if (h.surrendered) { outcome = 'loss'; payout = h.bet / 2; }
-      else if (pv > 21) { outcome = 'loss'; }
-      else if (pBJ && dealerBJ) { outcome = 'push'; payout = h.bet; }
-      else if (pBJ) { outcome = 'bj'; payout = h.bet + h.bet * this.settingsSvc.bjMultiplier(); }
-      else if (dealerBJ) { outcome = 'loss'; }
-      else if (dv > 21 || pv > dv) { outcome = 'win'; payout = h.bet * 2; }
-      else if (pv < dv) { outcome = 'loss'; }
-      else { outcome = 'push'; payout = h.bet; }
+      if (h.surrendered) {
+        outcome = 'loss';
+        payout = h.bet / 2;
+      } else if (pv > 21) {
+        outcome = 'loss';
+      } else if (pBJ && dealerBJ) {
+        outcome = 'push';
+        payout = h.bet;
+      } else if (pBJ) {
+        outcome = 'bj';
+        payout = h.bet + h.bet * this.settingsSvc.bjMultiplier();
+      } else if (dealerBJ) {
+        outcome = 'loss';
+      } else if (dv > 21 || pv > dv) {
+        outcome = 'win';
+        payout = h.bet * 2;
+      } else if (pv < dv) {
+        outcome = 'loss';
+      } else {
+        outcome = 'push';
+        payout = h.bet;
+      }
 
       net += payout - h.bet;
       this.stats.recordHand(outcome, h.bet);
       this.stats.recordNet(payout - h.bet);
-      this.progression.addXp(outcome === 'bj' ? 15 : outcome === 'win' ? 10 : outcome === 'push' ? 3 : 5);
+      this.progression.addXp(
+        outcome === 'bj' ? 15 : outcome === 'win' ? 10 : outcome === 'push' ? 3 : 5,
+      );
       if (outcome === 'bj') bj = true;
       else if (outcome === 'win') win = true;
       else if (outcome === 'loss' && !h.surrendered) loss = true;
@@ -302,9 +373,13 @@ export class Classique implements OnDestroy {
     this.phase.set('done');
     this.message.set(this.summary(net));
 
-    if (bj) { this.sound.blackjack(); this.celebrate(); }
-    else if (win) { this.sound.win(); this.celebrate(); }
-    else if (loss) this.sound.lose();
+    if (bj) {
+      this.sound.blackjack();
+      this.celebrate();
+    } else if (win) {
+      this.sound.win();
+      this.celebrate();
+    } else if (loss) this.sound.lose();
     else this.sound.push();
   }
 
@@ -318,7 +393,9 @@ export class Classique implements OnDestroy {
     this.confetti.set(false);
     if (this.pendingBet() > this.bankroll()) this.pendingBet.set(0);
     this.phase.set('bet');
-    this.message.set(this.bankroll() <= 0 ? 'Plus de jetons ! Réinitialisez.' : 'Placez votre mise.');
+    this.message.set(
+      this.bankroll() <= 0 ? 'Plus de jetons ! Réinitialisez.' : 'Placez votre mise.',
+    );
   }
 
   protected reset(): void {
@@ -329,23 +406,32 @@ export class Classique implements OnDestroy {
 
   // ---- Réglages --------------------------------------------------------
 
-  protected toggleSettings(): void { this.showSettings.update((v) => !v); }
+  protected toggleSettings(): void {
+    this.showSettings.update((v) => !v);
+  }
   protected updateCfg(patch: Partial<Settings>): void {
     this.settingsSvc.update(patch);
     this.sound.click();
   }
 
-  ngOnDestroy(): void { this.clearTimers(); }
+  ngOnDestroy(): void {
+    this.clearTimers();
+  }
 
   // ---- Interne ---------------------------------------------------------
 
   private ensureShoe(): void {
     const d = this.cfg().decks;
-    if (d !== this.shoeDecks) { this.shoe = new Shoe(d); this.shoeDecks = d; }
+    if (d !== this.shoeDecks) {
+      this.shoe = new Shoe(d);
+      this.shoeDecks = d;
+    }
   }
   private addCard(i: number, card: Card): void {
     this.sound.card();
-    this.hands.update((hs) => hs.map((h, idx) => (idx === i ? { ...h, cards: [...h.cards, card] } : h)));
+    this.hands.update((hs) =>
+      hs.map((h, idx) => (idx === i ? { ...h, cards: [...h.cards, card] } : h)),
+    );
   }
   private patchHand(i: number, patch: Partial<Hand>): void {
     this.hands.update((hs) => hs.map((h, idx) => (idx === i ? { ...h, ...patch } : h)));

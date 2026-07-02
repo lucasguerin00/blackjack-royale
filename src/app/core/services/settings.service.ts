@@ -20,9 +20,7 @@ export class SettingsService {
   readonly settings = this._settings.asReadonly();
 
   /** Durée d'une animation de distribution (ms) selon la vitesse choisie. */
-  readonly dealMs = computed(
-    () => ({ slow: 620, normal: 400, fast: 220 })[this._settings().speed],
-  );
+  readonly dealMs = computed(() => ({ slow: 620, normal: 400, fast: 220 })[this._settings().speed]);
 
   /** Multiplicateur de gain d'un blackjack naturel (1.5 pour 3:2, 1.2 pour 6:5). */
   readonly bjMultiplier = computed(() => (this._settings().blackjackPays === '3:2' ? 1.5 : 1.2));

@@ -65,8 +65,17 @@ export interface Stats {
 
 export function emptyStats(): Stats {
   return {
-    hands: 0, wins: 0, losses: 0, pushes: 0, blackjacks: 0,
-    wagered: 0, net: 0, bestWin: 0, worstLoss: 0,
-    streak: 0, bestStreak: 0, evLost: 0,
+    hands: 0,
+    wins: 0,
+    losses: 0,
+    pushes: 0,
+    blackjacks: 0,
+    wagered: 0,
+    net: 0,
+    bestWin: 0,
+    worstLoss: 0,
+    streak: 0,
+    bestStreak: 0,
+    evLost: 0,
   };
 }

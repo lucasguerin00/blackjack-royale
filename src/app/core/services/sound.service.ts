@@ -13,7 +13,9 @@ export class SoundService {
 
   private ac(): AudioContext | null {
     if (typeof window === 'undefined' || !this.settings.settings().sounds) return null;
-    const Ctor = window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+    const Ctor =
+      window.AudioContext ??
+      (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
     if (!Ctor) return null;
     this.ctx ??= new Ctor();
     if (this.ctx.state === 'suspended') void this.ctx.resume();
@@ -21,7 +23,14 @@ export class SoundService {
   }
 
   /** Bip harmonique avec enveloppe douce et glissando optionnel. */
-  private tone(freq: number, dur: number, type: OscillatorType = 'sine', gain = 0.09, when = 0, glideTo?: number): void {
+  private tone(
+    freq: number,
+    dur: number,
+    type: OscillatorType = 'sine',
+    gain = 0.09,
+    when = 0,
+    glideTo?: number,
+  ): void {
     const ctx = this.ac();
     if (!ctx) return;
     const t0 = ctx.currentTime + when;
@@ -59,13 +68,20 @@ export class SoundService {
   }
 
   /** Carte distribuée / retournée. */
-  card(): void { this.swish(0.12, 0.28, 1700, 0.8); }
+  card(): void {
+    this.swish(0.12, 0.28, 1700, 0.8);
+  }
 
   /** Jeton posé (deux petits clics). */
-  chip(): void { this.swish(0.05, 0.22, 2600, 3); this.swish(0.05, 0.16, 3200, 3); }
+  chip(): void {
+    this.swish(0.05, 0.22, 2600, 3);
+    this.swish(0.05, 0.16, 3200, 3);
+  }
 
   /** Clic d'action générique. */
-  click(): void { this.tone(440, 0.05, 'triangle', 0.05); }
+  click(): void {
+    this.tone(440, 0.05, 'triangle', 0.05);
+  }
 
   /** Main gagnée. */
   win(): void {
@@ -74,13 +90,20 @@ export class SoundService {
 
   /** Blackjack : fanfare un peu plus riche. */
   blackjack(): void {
-    [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => this.tone(f, 0.22, 'triangle', 0.09, i * 0.09));
+    [523.25, 659.25, 783.99, 1046.5].forEach((f, i) =>
+      this.tone(f, 0.22, 'triangle', 0.09, i * 0.09),
+    );
     this.tone(1567.98, 0.4, 'sine', 0.05, 0.36);
   }
 
   /** Main perdue : descente. */
-  lose(): void { this.tone(392, 0.35, 'sawtooth', 0.05, 0, 174.61); }
+  lose(): void {
+    this.tone(392, 0.35, 'sawtooth', 0.05, 0, 174.61);
+  }
 
   /** Égalité : deux notes neutres. */
-  push(): void { this.tone(440, 0.12, 'sine', 0.06); this.tone(440, 0.12, 'sine', 0.06, 0.14); }
+  push(): void {
+    this.tone(440, 0.12, 'sine', 0.06);
+    this.tone(440, 0.12, 'sine', 0.06, 0.14);
+  }
 }

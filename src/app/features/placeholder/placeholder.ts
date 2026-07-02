@@ -16,10 +16,24 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
   `,
   styles: [
     `
-      .ph { text-align: center; padding: 70px 20px; max-width: 620px; margin: 0 auto; }
-      .ph .ic { font-size: 76px; }
-      .ph h1 { font-size: 34px; color: var(--or); margin: 10px 0; }
-      .ph p { color: #a9d8bd; margin-bottom: 24px; }
+      .ph {
+        text-align: center;
+        padding: 70px 20px;
+        max-width: 620px;
+        margin: 0 auto;
+      }
+      .ph .ic {
+        font-size: 76px;
+      }
+      .ph h1 {
+        font-size: 34px;
+        color: var(--or);
+        margin: 10px 0;
+      }
+      .ph p {
+        color: #a9d8bd;
+        margin-bottom: 24px;
+      }
     `,
   ],
 })

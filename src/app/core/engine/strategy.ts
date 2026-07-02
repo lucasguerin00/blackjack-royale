@@ -12,8 +12,8 @@ export type StrategyTable = 'hard' | 'soft' | 'pairs';
 export const COLS = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11] as const;
 
 export const HARD: Record<number, StrategyCode[]> = {
-  8:  ['H', 'H', 'H', 'H', 'H', 'H', 'H', 'H', 'H', 'H'],
-  9:  ['H', 'D', 'D', 'D', 'D', 'H', 'H', 'H', 'H', 'H'],
+  8: ['H', 'H', 'H', 'H', 'H', 'H', 'H', 'H', 'H', 'H'],
+  9: ['H', 'D', 'D', 'D', 'D', 'H', 'H', 'H', 'H', 'H'],
   10: ['D', 'D', 'D', 'D', 'D', 'D', 'D', 'D', 'H', 'H'],
   11: ['D', 'D', 'D', 'D', 'D', 'D', 'D', 'D', 'D', 'D'],
   12: ['H', 'H', 'S', 'S', 'S', 'H', 'H', 'H', 'H', 'H'],
@@ -36,14 +36,14 @@ export const SOFT: Record<number, StrategyCode[]> = {
 };
 
 export const PAIRS: Record<number, StrategyCode[]> = {
-  2:  ['P', 'P', 'P', 'P', 'P', 'P', 'H', 'H', 'H', 'H'],
-  3:  ['P', 'P', 'P', 'P', 'P', 'P', 'H', 'H', 'H', 'H'],
-  4:  ['H', 'H', 'H', 'P', 'P', 'H', 'H', 'H', 'H', 'H'],
-  5:  ['D', 'D', 'D', 'D', 'D', 'D', 'D', 'D', 'H', 'H'],
-  6:  ['P', 'P', 'P', 'P', 'P', 'H', 'H', 'H', 'H', 'H'],
-  7:  ['P', 'P', 'P', 'P', 'P', 'P', 'H', 'H', 'H', 'H'],
-  8:  ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
-  9:  ['P', 'P', 'P', 'P', 'P', 'S', 'P', 'P', 'S', 'S'],
+  2: ['P', 'P', 'P', 'P', 'P', 'P', 'H', 'H', 'H', 'H'],
+  3: ['P', 'P', 'P', 'P', 'P', 'P', 'H', 'H', 'H', 'H'],
+  4: ['H', 'H', 'H', 'P', 'P', 'H', 'H', 'H', 'H', 'H'],
+  5: ['D', 'D', 'D', 'D', 'D', 'D', 'D', 'D', 'H', 'H'],
+  6: ['P', 'P', 'P', 'P', 'P', 'H', 'H', 'H', 'H', 'H'],
+  7: ['P', 'P', 'P', 'P', 'P', 'P', 'H', 'H', 'H', 'H'],
+  8: ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+  9: ['P', 'P', 'P', 'P', 'P', 'S', 'P', 'P', 'S', 'S'],
   10: ['S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S'],
   11: ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
 };
@@ -92,10 +92,15 @@ export function recommend(
 
 export function actionLabel(code: StrategyCode, canDouble: boolean): string {
   switch (code) {
-    case 'H': return 'Tirer';
-    case 'S': return 'Rester';
-    case 'P': return 'Séparer';
-    case 'D': return canDouble ? 'Doubler' : 'Tirer';
-    case 'Ds': return canDouble ? 'Doubler' : 'Rester';
+    case 'H':
+      return 'Tirer';
+    case 'S':
+      return 'Rester';
+    case 'P':
+      return 'Séparer';
+    case 'D':
+      return canDouble ? 'Doubler' : 'Tirer';
+    case 'Ds':
+      return canDouble ? 'Doubler' : 'Rester';
   }
 }

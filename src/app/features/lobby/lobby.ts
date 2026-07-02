@@ -30,13 +30,55 @@ export class Lobby {
   );
 
   protected readonly modes: ModeTile[] = [
-    { icon: '🎴', name: 'Classique', desc: 'Le blackjack pur, sans fioritures.', path: '/classique', available: true },
-    { icon: '🎰', name: 'Carrière', desc: 'Tables à paliers, prestige, jetons, IA et ambiance casino.', path: '/carriere', available: false },
-    { icon: '🕵️', name: 'Comptage', desc: 'Entraîneur Hi-Lo, drills notés et jauge de suspicion.', path: '/comptage', available: false },
-    { icon: '🧠', name: 'Coach & Probas', desc: 'Probabilités en direct, EV perdue, analyse.', path: '/coach', available: false },
-    { icon: '🃏', name: 'Roguelike', desc: 'Runs, Jokers et reliques, boss dealers.', path: '/roguelike', available: false },
-    { icon: '📊', name: 'Statistiques', desc: 'KPI, session vs all-time.', path: '/stats', available: false },
-    { icon: '🙂', name: 'Profil', desc: 'Avatar, nom, titre, réglages.', path: '/profil', available: false },
+    {
+      icon: '🎴',
+      name: 'Classique',
+      desc: 'Le blackjack pur, sans fioritures.',
+      path: '/classique',
+      available: true,
+    },
+    {
+      icon: '🎰',
+      name: 'Carrière',
+      desc: 'Tables à paliers, prestige, jetons, IA et ambiance casino.',
+      path: '/carriere',
+      available: false,
+    },
+    {
+      icon: '🕵️',
+      name: 'Comptage',
+      desc: 'Entraîneur Hi-Lo, drills notés et jauge de suspicion.',
+      path: '/comptage',
+      available: false,
+    },
+    {
+      icon: '🧠',
+      name: 'Coach & Probas',
+      desc: 'Probabilités en direct, EV perdue, analyse.',
+      path: '/coach',
+      available: false,
+    },
+    {
+      icon: '🃏',
+      name: 'Roguelike',
+      desc: 'Runs, Jokers et reliques, boss dealers.',
+      path: '/roguelike',
+      available: false,
+    },
+    {
+      icon: '📊',
+      name: 'Statistiques',
+      desc: 'KPI, session vs all-time.',
+      path: '/stats',
+      available: false,
+    },
+    {
+      icon: '🙂',
+      name: 'Profil',
+      desc: 'Avatar, nom, titre, réglages.',
+      path: '/profil',
+      available: false,
+    },
   ];
 
   protected editName(): void {
