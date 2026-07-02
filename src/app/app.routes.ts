@@ -3,12 +3,13 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: '',
-    loadComponent: () => import('./features/lobby/lobby').then((m) => m.Lobby),
+    loadComponent: () => import('./features/lobby/pages/lobby/lobby.page').then((m) => m.LobbyPage),
     title: 'Blackjack Royale',
   },
   {
     path: 'classique',
-    loadComponent: () => import('./features/classique/classique').then((m) => m.Classique),
+    loadComponent: () =>
+      import('./features/classique/pages/classique/classique.page').then((m) => m.ClassiquePage),
     title: 'Classique — Blackjack Royale',
   },
   {

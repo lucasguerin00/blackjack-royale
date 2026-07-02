@@ -1,0 +1,34 @@
+<div class="mx-auto max-w-[1100px] px-[18px] pb-16 pt-6 gap-3">
+  <!-- Marque -->
+  <div class="mb-6 text-center">
+    <h1 class="text-4xl font-extrabold tracking-wide text-amber-400 [text-shadow:0_3px_0_#7a5a00]">
+      🃏 BLACKJACK <span class="text-white">ROYALE</span>
+    </h1>
+    <p class="mt-0.5 text-xs tracking-[4px] text-emerald-200/70">C A S I N O</p>
+  </div>
+
+  <!-- Bandeau profil -->
+  <app-profile-summary
+    [profile]="profile()"
+    [level]="prog().level"
+    [xp]="prog().xp"
+    [xpNeeded]="xpNeeded()"
+    [comps]="prog().comps"
+    [bankroll]="bankroll()"
+    [xpPercent]="xpPercent()"
+    (avatarCycled)="cycleAvatar()"
+    (nameEdited)="editName()"
+  />
+
+  <!-- Grille des modes -->
+  <div class="grid grid-cols-[repeat(auto-fill,minmax(230px,1fr))] gap-4 mt-5">
+    @for (mode of modes; track mode.path) {
+      <app-mode-tile [mode]="mode" />
+    }
+  </div>
+
+  <!-- Note de persistance locale -->
+  <p class="mt-8 text-center text-xs text-emerald-300/50">
+    Tes données (profil, progression, statistiques) sont sauvegardées dans ce navigateur.
+  </p>
+</div>

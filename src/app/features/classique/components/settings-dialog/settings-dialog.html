@@ -1,0 +1,105 @@
+<p-dialog
+  header="⚙️ Réglages"
+  [visible]="visible()"
+  (visibleChange)="visibleChange.emit($event)"
+  [modal]="true"
+  [dismissableMask]="true"
+  [style]="{ width: '30rem' }"
+>
+  <div class="flex flex-col gap-1">
+    <div class="flex items-center justify-between gap-3 border-b border-white/10 py-2 text-sm">
+      Sons
+      <p-toggleswitch
+        ariaLabel="Sons"
+        [ngModel]="settings().sounds"
+        (onChange)="changed.emit({ sounds: $event.checked })"
+      />
+    </div>
+    <div class="flex items-center justify-between gap-3 border-b border-white/10 py-2 text-sm">
+      Confettis
+      <p-toggleswitch
+        ariaLabel="Confettis"
+        [ngModel]="settings().confetti"
+        (onChange)="changed.emit({ confetti: $event.checked })"
+      />
+    </div>
+    <div class="flex items-center justify-between gap-3 border-b border-white/10 py-2 text-sm">
+      Vitesse
+      <p-selectbutton
+        [options]="speedOptions"
+        [ngModel]="settings().speed"
+        optionLabel="label"
+        optionValue="value"
+        [allowEmpty]="false"
+        (onChange)="changed.emit({ speed: $event.value })"
+      />
+    </div>
+
+    <p-divider align="left">
+      <span class="text-xs uppercase tracking-[2px] text-emerald-100/80">
+        Règles de la table <span class="normal-case opacity-70">(à la prochaine donne)</span>
+      </span>
+    </p-divider>
+
+    <div class="flex items-center justify-between gap-3 border-b border-white/10 py-2 text-sm">
+      Jeux dans le sabot
+      <p-selectbutton
+        [options]="deckOptions"
+        [ngModel]="settings().decks"
+        optionLabel="label"
+        optionValue="value"
+        [allowEmpty]="false"
+        (onChange)="changed.emit({ decks: $event.value })"
+      />
+    </div>
+    <div class="flex items-center justify-between gap-3 border-b border-white/10 py-2 text-sm">
+      Croupier sur 17 souple
+      <p-selectbutton
+        [options]="dealerOptions"
+        [ngModel]="settings().dealerHitsSoft17"
+        optionLabel="label"
+        optionValue="value"
+        [allowEmpty]="false"
+        (onChange)="changed.emit({ dealerHitsSoft17: $event.value })"
+      />
+    </div>
+    <div class="flex items-center justify-between gap-3 border-b border-white/10 py-2 text-sm">
+      Blackjack paie
+      <p-selectbutton
+        [options]="payoutOptions"
+        [ngModel]="settings().blackjackPays"
+        optionLabel="label"
+        optionValue="value"
+        [allowEmpty]="false"
+        (onChange)="changed.emit({ blackjackPays: $event.value })"
+      />
+    </div>
+    <div class="flex items-center justify-between gap-3 border-b border-white/10 py-2 text-sm">
+      Double après séparation
+      <p-toggleswitch
+        ariaLabel="Double après séparation"
+        [ngModel]="settings().doubleAfterSplit"
+        (onChange)="changed.emit({ doubleAfterSplit: $event.checked })"
+      />
+    </div>
+    <div class="flex items-center justify-between gap-3 border-b border-white/10 py-2 text-sm">
+      Abandon autorisé
+      <p-toggleswitch
+        ariaLabel="Abandon autorisé"
+        [ngModel]="settings().surrender"
+        (onChange)="changed.emit({ surrender: $event.checked })"
+      />
+    </div>
+    <div class="flex items-center justify-between gap-3 py-2 text-sm">
+      Séparations max
+      <p-selectbutton
+        [options]="splitOptions"
+        [ngModel]="settings().maxSplits"
+        optionLabel="label"
+        optionValue="value"
+        [allowEmpty]="false"
+        (onChange)="changed.emit({ maxSplits: $event.value })"
+      />
+    </div>
+  </div>
+</p-dialog>

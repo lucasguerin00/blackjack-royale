@@ -1,0 +1,13 @@
+@if (active()) {
+  <div class="pointer-events-none fixed inset-0 z-50 overflow-hidden">
+    @for (piece of pieces; track $index) {
+      <span
+        class="confetti-piece absolute -top-[8%] text-[22px]"
+        [style.left.%]="piece.left"
+        [style.animation-delay.ms]="piece.delay"
+        [style.animation-duration.ms]="piece.dur"
+        >{{ piece.emoji }}</span
+      >
+    }
+  </div>
+}

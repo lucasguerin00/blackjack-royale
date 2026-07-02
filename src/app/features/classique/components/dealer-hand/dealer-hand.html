@@ -1,0 +1,26 @@
+<p-card>
+  <!-- Libellé + total (masqué par « ? » tant que la carte cachée n'est pas révélée) -->
+  <div
+    class="mb-2.5 flex items-center justify-center gap-2.5 text-xs uppercase tracking-[3px] text-emerald-100/80"
+  >
+    Croupier
+    @if (cards().length) {
+      <p-tag [value]="revealed() ? value() + '' : '?'" severity="warn" />
+    }
+  </div>
+
+  <!-- Cartes : la première est retournée face cachée avant la révélation -->
+  <div class="flex min-h-[100px] justify-center">
+    @for (card of cards(); track $index) {
+      @if ($index === 0 && !revealed()) {
+        <app-playing-card class="-ml-5 block first:ml-0" [faceDown]="true" />
+      } @else {
+        <app-playing-card
+          class="-ml-5 block first:ml-0"
+          [card]="card"
+          [animation]="$index === 0 ? 'flip' : 'deal'"
+        />
+      }
+    }
+  </div>
+</p-card>

@@ -1,0 +1,33 @@
+<!-- Contrôles de la phase de mise -->
+<div class="flex flex-wrap items-center justify-center gap-2.5">
+  <!-- Jetons cliquables (couleur selon la valeur) -->
+  <div class="flex gap-2">
+    @for (chip of chips(); track chip) {
+      <button
+        type="button"
+        class="h-14 w-14 rounded-full border-[3px] border-dashed border-white/50 p-0 text-sm font-extrabold text-white shadow-md transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-40 {{
+          color(chip)
+        }}"
+        [disabled]="bankroll() < chip || pendingBet() + chip > bankroll()"
+        (click)="chipAdded.emit(chip)"
+      >
+        {{ chip }}
+      </button>
+    }
+  </div>
+
+  <!-- Mise en cours -->
+  <span class="text-emerald-100"
+    >Mise : <b class="text-xl text-amber-400">{{ pendingBet() }}</b></span
+  >
+
+  <!-- Effacer la mise / distribuer -->
+  <p-button
+    label="Effacer"
+    severity="secondary"
+    [text]="true"
+    [disabled]="pendingBet() === 0"
+    (onClick)="cleared.emit()"
+  />
+  <p-button label="Distribuer" [disabled]="pendingBet() <= 0" (onClick)="dealt.emit()" />
+</div>

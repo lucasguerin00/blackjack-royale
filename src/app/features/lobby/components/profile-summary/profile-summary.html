@@ -1,0 +1,50 @@
+<p-card>
+  <div class="flex flex-wrap items-center gap-4">
+    <!-- Avatar cliquable (fait défiler les emojis) -->
+    <button type="button" title="Changer d'avatar" (click)="avatarCycled.emit()">
+      <p-avatar
+        [label]="profile().avatar"
+        size="xlarge"
+        shape="circle"
+        class="text-3xl transition hover:scale-105"
+      />
+    </button>
+
+    <!-- Nom, titre et progression -->
+    <div class="min-w-[220px] flex-1">
+      <div class="flex items-center gap-2">
+        <span class="text-xl font-extrabold">{{ profile().name }}</span>
+        <p-button
+          label="modifier"
+          icon="pi pi-pencil"
+          severity="secondary"
+          size="small"
+          [text]="true"
+          (onClick)="nameEdited.emit()"
+        />
+      </div>
+      <div class="text-[13px] tracking-wide text-amber-400">{{ profile().title }}</div>
+
+      <!-- Barre d'XP -->
+      <p-progressbar
+        [value]="xpPercent()"
+        [showValue]="false"
+        [style]="{ height: '8px' }"
+        class="mt-2 block max-w-[320px]"
+      />
+      <div class="mt-1 text-[11px] text-emerald-200/60">
+        Niveau {{ level() }} — {{ xp() }} / {{ xpNeeded() }} XP
+      </div>
+    </div>
+
+    <!-- Statistiques (fortune / niveau / comps) -->
+    <div class="flex gap-3">
+      @for (stat of stats(); track stat.label) {
+        <div class="rounded-xl border border-amber-500/50 bg-black/30 px-4 py-2 text-right">
+          <b class="block text-xl text-amber-400">{{ stat.value }}</b>
+          <span class="text-[10px] tracking-[2px] text-emerald-200/60">{{ stat.label }}</span>
+        </div>
+      }
+    </div>
+  </div>
+</p-card>

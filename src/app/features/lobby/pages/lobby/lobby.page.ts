@@ -1,34 +1,36 @@
-import { Component, computed, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { ProfileService } from '../../core/services/profile.service';
-import { ProgressionService } from '../../core/services/progression.service';
+import { ChangeDetectionStrategy, Component, computed, inject, Signal } from '@angular/core';
+import { ProfileService } from '../../../../core/services/profile.service';
+import { ProgressionService } from '../../../../core/services/progression.service';
+import { ModeTile } from '../../models/mode-tile.model';
+import { ModeTileComponent } from '../../components/mode-tile/mode-tile';
+import { ProfileSummary } from '../../components/profile-summary/profile-summary';
 
-interface ModeTile {
-  icon: string;
-  name: string;
-  desc: string;
-  path: string;
-  available: boolean;
-}
-
+/**
+ * Page d'accueil (lobby, smart). Compose le bandeau de profil et la grille des
+ * modes ; relaie les intentions du profil vers les services.
+ * @export
+ * @class LobbyPage
+ */
 @Component({
   selector: 'app-lobby',
-  imports: [RouterLink],
-  templateUrl: './lobby.html',
-  styleUrl: './lobby.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ProfileSummary, ModeTileComponent],
+  templateUrl: './lobby.page.html',
 })
-export class Lobby {
-  protected readonly profileSvc = inject(ProfileService);
+export class LobbyPage {
+  private readonly profileSvc = inject(ProfileService);
   private readonly progSvc = inject(ProgressionService);
 
+  // État de progression exposé au template.
   protected readonly profile = this.profileSvc.profile;
   protected readonly prog = this.progSvc.progression;
   protected readonly bankroll = this.progSvc.bankroll;
   protected readonly xpNeeded = computed(() => this.progSvc.xpForLevel(this.prog().level));
-  protected readonly xpPercent = computed(() =>
+  protected readonly xpPercent: Signal<number> = computed(() =>
     Math.min(100, (this.prog().xp / this.xpNeeded()) * 100),
   );
 
+  /** Modes proposés dans le lobby (seul le Classique est jouable pour l'instant). */
   protected readonly modes: ModeTile[] = [
     {
       icon: '🎴',
@@ -81,6 +83,12 @@ export class Lobby {
     },
   ];
 
+  /** Fait défiler l'avatar du joueur. */
+  protected cycleAvatar(): void {
+    this.profileSvc.cycleAvatar();
+  }
+
+  /** Édite le nom du joueur (invite navigateur, provisoire). */
   protected editName(): void {
     const name = prompt('Ton nom de joueur :', this.profile().name);
     if (name) this.profileSvc.setName(name);

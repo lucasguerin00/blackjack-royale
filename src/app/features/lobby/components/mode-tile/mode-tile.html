@@ -1,0 +1,24 @@
+<!-- Tuile cliquable si le mode est jouable, grisée sinon -->
+@if (mode().available) {
+  <a [routerLink]="mode().path" class="block no-underline">
+    <p-card class="block h-full transition hover:-translate-y-1">
+      <!-- Icône + badge « JOUER » -->
+      <div class="flex items-start justify-between">
+        <p-avatar [label]="mode().icon" size="large" shape="circle" />
+        <p-tag value="JOUER" severity="success" />
+      </div>
+      <h3 class="mb-1 mt-3 text-lg font-bold">{{ mode().name }}</h3>
+      <p class="text-sm leading-snug text-emerald-200/70">{{ mode().desc }}</p>
+    </p-card>
+  </a>
+} @else {
+  <p-card class="block h-full opacity-55">
+    <!-- Icône + badge « BIENTÔT » -->
+    <div class="flex items-start justify-between">
+      <p-avatar [label]="mode().icon" size="large" shape="circle" />
+      <p-tag value="BIENTÔT" severity="secondary" />
+    </div>
+    <h3 class="mb-1 mt-3 text-lg font-bold">{{ mode().name }}</h3>
+    <p class="text-sm leading-snug text-emerald-200/70">{{ mode().desc }}</p>
+  </p-card>
+}

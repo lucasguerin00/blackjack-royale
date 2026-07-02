@@ -1,0 +1,115 @@
+<!-- Barre supérieure : retour au lobby + ouverture des réglages -->
+<div class="mx-auto flex max-w-[1500px] items-center justify-between px-[18px] pt-3.5">
+  <p-button label="← Accueil" severity="secondary" [text]="true" (onClick)="goHome()" />
+  <p-button
+    icon="pi pi-cog"
+    severity="secondary"
+    [rounded]="true"
+    [text]="true"
+    ariaLabel="Réglages"
+    (onClick)="showSettings.set(true)"
+  />
+</div>
+
+<!-- Table de feutre (dégradé radial en classe utilitaire Tailwind) -->
+<div
+  class="relative mx-auto mb-16 mt-3.5 max-w-[820px] rounded-[22px] px-5 pb-8 pt-4 shadow-2xl bg-[radial-gradient(ellipse_at_50%_-10%,#147a45_0%,#0a5f34_58%,#073f23_100%)]"
+>
+  <!-- En-tête : titre, bankroll et réinitialisation -->
+  <header class="mb-2 flex flex-wrap items-center justify-between gap-3">
+    <h1 class="text-[28px] font-bold text-amber-400">🎴 Classique</h1>
+    <div class="flex items-center gap-3">
+      <!-- Solde de jetons (source de vérité partagée avec le lobby) -->
+      <p-chip icon="pi pi-wallet" [label]="game.bankroll() + ' jetons'" />
+      <p-button label="Réinitialiser" severity="secondary" (onClick)="game.reset()" />
+    </div>
+  </header>
+
+  <!-- Main du croupier (carte cachée jusqu'à la révélation) -->
+  <app-dealer-hand
+    [cards]="game.dealer()"
+    [revealed]="game.revealed()"
+    [value]="game.dealerValue()"
+  />
+
+  <!-- Message d'état (doré en fin de manche) -->
+  <p
+    class="my-2 min-h-[26px] text-center text-lg font-semibold"
+    [class.text-amber-400]="game.phase() === 'done'"
+    [class.text-emerald-50]="game.phase() !== 'done'"
+  >
+    {{ game.message() }}
+  </p>
+
+  <!-- Mains du joueur (plusieurs après séparation) ; surbrillance de la main active -->
+  <div class="my-1.5 flex flex-wrap justify-center gap-3.5">
+    @for (hand of game.hands(); track $index; let i = $index) {
+      <app-player-hand
+        [hand]="hand"
+        [active]="i === game.activeIndex() && game.phase() === 'player'"
+      />
+    }
+  </div>
+
+  <!-- Contrôles contextuels selon la phase de la manche -->
+  <div class="mt-3.5 flex flex-wrap items-center justify-center gap-2.5">
+    @switch (game.phase()) {
+      <!-- Phase de mise : jetons + distribution -->
+      @case ('bet') {
+        <app-bet-controls
+          [chips]="chips"
+          [pendingBet]="game.pendingBet()"
+          [bankroll]="game.bankroll()"
+          (chipAdded)="game.addBet($event)"
+          (cleared)="game.clearBet()"
+          (dealt)="game.deal()"
+        />
+      }
+      <!-- Proposition d'assurance (croupier montrant un As) -->
+      @case ('insurance') {
+        <p-button
+          [label]="'Assurance (' + game.insuranceCost() + ')'"
+          [disabled]="game.bankroll() < game.insuranceCost()"
+          (onClick)="game.takeInsurance()"
+        />
+        <p-button label="Non merci" severity="secondary" (onClick)="game.declineInsurance()" />
+      }
+      <!-- Tour du joueur : actions disponibles + conseil -->
+      @case ('player') {
+        <app-action-bar
+          [canDouble]="game.canDouble()"
+          [canSplit]="game.canSplit()"
+          [canSurrender]="game.canSurrender()"
+          [hint]="game.hint()"
+          (hit)="game.hit()"
+          (stand)="game.stand()"
+          (double)="game.double()"
+          (split)="game.split()"
+          (surrender)="game.surrender()"
+        />
+      }
+      <!-- Tour du croupier (automatisé et animé) -->
+      @case ('dealer') {
+        <span class="text-emerald-100">Le croupier joue…</span>
+      }
+      <!-- Manche terminée : relancer -->
+      @case ('done') {
+        <p-button label="Nouvelle donne" (onClick)="game.newRound()" />
+      }
+    }
+  </div>
+</div>
+
+<!-- Notifications de résultat de manche -->
+<p-toast position="top-center" />
+
+<!-- Pluie de confettis en cas de victoire -->
+<app-confetti-overlay [active]="game.confetti()" />
+
+<!-- Modale de réglages (liaison bidirectionnelle de la visibilité) -->
+<app-settings-dialog
+  [visible]="showSettings()"
+  (visibleChange)="showSettings.set($event)"
+  [settings]="game.settings()"
+  (changed)="game.updateSettings($event)"
+/>

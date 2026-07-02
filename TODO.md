@@ -6,6 +6,19 @@
 
 L'appli est en ligne : https://github.com/lucasguerin00/blackjack-royale
 
+## ✅ Fait le 2026-07-02
+
+- Table complète : **split multi-mains, assurance, abandon, double**, écran de réglages.
+- **Bankroll unifiée** sur `ProgressionService` (fin de la double source de vérité).
+- Animations (distribution, flip croupier, confettis) + **sons** synthétisés (Web Audio).
+- **Outillage pro** : ESLint 9 + Prettier, PrimeNG 20 + Tailwind v4 + thème Casino.
+- **Refactor architecture** : smart/dumb, `OnPush`, moteur pur (`core/engine/table.ts`) + service
+  `ClassiqueGame`, dumbs (playing-card, dealer/player-hand, bet-controls, action-bar, settings-dialog).
+- **UI PrimeNG** : p-card, p-avatar, p-progressbar, p-tag, p-chip, p-toast, p-divider, p-dialog…
+- Lobby + placeholder migrés en PrimeNG/Tailwind ; `styles.scss` réduit au fond feutré.
+
+> Reste en cours : vérif visuelle finale, puis déploiement et multijoueur.
+
 ---
 
 ## Phase 0 — Fondations & qualité (à faire en premier)

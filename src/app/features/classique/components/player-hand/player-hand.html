@@ -1,0 +1,17 @@
+<p-card class="block rounded-xl transition {{ stateClass() }}">
+  <!-- Cartes de la main -->
+  <div class="flex min-h-[100px] justify-center">
+    @for (card of hand().cards; track $index) {
+      <app-playing-card class="-ml-5 block first:ml-0" [card]="card" />
+    }
+  </div>
+
+  <!-- Infos : total (repère « souple »), mise et verdict de fin de manche -->
+  <div class="mt-2 flex flex-wrap items-center justify-center gap-2">
+    <p-tag severity="warn" [value]="total() + (soft() && total() < 21 ? ' ·' : '')" />
+    <p-chip [label]="hand().bet + ' j'" />
+    @if (verdict()) {
+      <p-tag [severity]="verdictSeverity()" [value]="verdict()" />
+    }
+  </div>
+</p-card>

@@ -1,0 +1,32 @@
+/* Uniquement l'inévitable : animations d'entrée des cartes. Tout le reste passe
+   par des classes utilitaires Tailwind dans le template. */
+
+.pc-deal {
+  animation: pc-deal 0.5s cubic-bezier(0.18, 0.7, 0.28, 1) both;
+}
+
+.pc-flip {
+  animation: pc-flip 0.5s ease both;
+}
+
+@keyframes pc-deal {
+  from {
+    transform: translate(60px, -120px) rotate(14deg) scale(0.85);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+@keyframes pc-flip {
+  from {
+    transform: rotateY(90deg) scale(0.92);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}

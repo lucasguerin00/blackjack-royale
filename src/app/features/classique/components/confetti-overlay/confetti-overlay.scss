@@ -1,0 +1,14 @@
+/* Uniquement l'inévitable : la chute animée des confettis. */
+
+.confetti-piece {
+  animation-name: confetti-fall;
+  animation-timing-function: linear;
+  animation-fill-mode: both;
+}
+
+@keyframes confetti-fall {
+  to {
+    transform: translateY(112vh) rotate(560deg);
+    opacity: 0.85;
+  }
+}

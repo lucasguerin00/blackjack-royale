@@ -1,0 +1,21 @@
+<div class="flex flex-col items-center gap-3">
+  <!-- Actions : tirer/rester toujours dispo, double/séparer/abandon selon le contexte -->
+  <div class="flex flex-wrap items-center justify-center gap-2.5">
+    <p-button label="Tirer" (onClick)="hit.emit()" />
+    <p-button label="Rester" (onClick)="stand.emit()" />
+    @if (canDouble()) {
+      <p-button label="Doubler" severity="info" (onClick)="double.emit()" />
+    }
+    @if (canSplit()) {
+      <p-button label="Séparer" severity="info" (onClick)="split.emit()" />
+    }
+    @if (canSurrender()) {
+      <p-button
+        label="Abandonner"
+        severity="secondary"
+        [text]="true"
+        (onClick)="surrender.emit()"
+      />
+    }
+  </div>
+</div>

@@ -2,3 +2,4 @@
 export * from './cards';
 export * from './shoe';
 export * from './strategy';
+export * from './table';
