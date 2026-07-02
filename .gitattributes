@@ -1,0 +1,26 @@
+# Normalise les fins de ligne : LF dans le dépôt pour tous les fichiers texte.
+* text=auto eol=lf
+
+# Fichiers texte explicites (au cas où)
+*.ts     text eol=lf
+*.js     text eol=lf
+*.mjs    text eol=lf
+*.json   text eol=lf
+*.html   text eol=lf
+*.scss   text eol=lf
+*.css    text eol=lf
+*.md     text eol=lf
+*.yml    text eol=lf
+*.yaml   text eol=lf
+*.svg    text eol=lf
+
+# Fichiers binaires : jamais de conversion
+*.png    binary
+*.jpg    binary
+*.jpeg   binary
+*.gif    binary
+*.ico    binary
+*.woff   binary
+*.woff2  binary
+*.ttf    binary
+*.eot    binary
