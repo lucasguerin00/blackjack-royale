@@ -1,6 +1,9 @@
-<div class="topnav"><a class="retour" routerLink="/">← Accueil</a></div>
+<div class="topnav">
+  <a class="retour" routerLink="/">← Accueil</a>
+  <button class="ico" (click)="toggleSettings()" title="Réglages">⚙️</button>
+</div>
 
-<div class="classique">
+<div class="table">
   <div class="entete">
     <h1>🎴 Classique</h1>
     <div class="solde">
@@ -10,7 +13,7 @@
   </div>
 
   <!-- Croupier -->
-  <div class="zone">
+  <div class="zone dealer">
     <div class="zone-titre">
       Croupier
       @if (dealer().length) {
@@ -19,10 +22,11 @@
     </div>
     <div class="cartes">
       @for (c of dealer(); track $index) {
-        @if (!revealed() && $index === 0) {
+        @if ($index === 0 && !revealed()) {
           <div class="carte dos"></div>
         } @else {
-          <div class="carte" [class.rouge]="red(c)" [class.noir]="!red(c)">
+          <div class="carte" [class.flip]="$index === 0" [class.arrive]="$index > 0"
+               [class.rouge]="red(c)" [class.noir]="!red(c)">
             <span class="r">{{ c.rank }}</span>
             <span class="c">{{ c.suit }}</span>
             <span class="s">{{ c.suit }}</span>
@@ -32,25 +36,36 @@
     </div>
   </div>
 
-  <div class="message">{{ message() }}</div>
+  <div class="message" [class.gain]="phase() === 'done'">{{ message() }}</div>
 
-  <!-- Joueur -->
-  <div class="zone">
-    <div class="zone-titre">
-      Vous
-      @if (player().length) {
-        <span class="badge">{{ playerValue() }}</span>
-      }
-    </div>
-    <div class="cartes">
-      @for (c of player(); track $index) {
-        <div class="carte" [class.rouge]="red(c)" [class.noir]="!red(c)">
-          <span class="r">{{ c.rank }}</span>
-          <span class="c">{{ c.suit }}</span>
-          <span class="s">{{ c.suit }}</span>
+  <!-- Mains du joueur -->
+  <div class="mains">
+    @for (h of hands(); track $index; let i = $index) {
+      <div class="hand"
+           [class.active]="i === activeIndex() && phase() === 'player'"
+           [class.win]="h.outcome === 'win' || h.outcome === 'bj'"
+           [class.loss]="h.outcome === 'loss'"
+           [class.push]="h.outcome === 'push'">
+        <div class="cartes">
+          @for (c of h.cards; track $index) {
+            <div class="carte arrive" [class.rouge]="red(c)" [class.noir]="!red(c)">
+              <span class="r">{{ c.rank }}</span>
+              <span class="c">{{ c.suit }}</span>
+              <span class="s">{{ c.suit }}</span>
+            </div>
+          }
         </div>
-      }
-    </div>
+        <div class="hand-info">
+          <span class="badge">{{ handTotal(h) }}@if (isSoft(h) && handTotal(h) < 21) {<i class="soft">S</i>}</span>
+          <span class="chip-bet">{{ h.bet }}</span>
+          @if (h.outcome) {
+            <span class="verdict">
+              {{ h.outcome === 'bj' ? 'BLACKJACK' : h.outcome === 'win' ? 'GAGNÉ' : h.outcome === 'push' ? 'ÉGALITÉ' : h.surrendered ? 'ABANDON' : 'PERDU' }}
+            </span>
+          }
+        </div>
+      </div>
+    }
   </div>
 
   <!-- Contrôles -->
@@ -59,25 +74,98 @@
       @case ('bet') {
         <div class="jetons">
           @for (v of chips; track v) {
-            <button class="jeton" (click)="addBet(v)" [disabled]="bankroll() < v">{{ v }}</button>
+            <button class="jeton" (click)="addBet(v)" [disabled]="bankroll() < v || pendingBet() + v > bankroll()">{{ v }}</button>
           }
         </div>
-        <span class="mise">Mise : <b>{{ bet() }}</b></span>
-        <button class="sec" (click)="clearBet()">Effacer</button>
-        <button (click)="deal()" [disabled]="bet() <= 0">Distribuer</button>
+        <span class="mise">Mise : <b>{{ pendingBet() }}</b></span>
+        <button class="sec" (click)="clearBet()" [disabled]="pendingBet() === 0">Effacer</button>
+        <button (click)="deal()" [disabled]="pendingBet() <= 0">Distribuer</button>
+      }
+      @case ('insurance') {
+        <button (click)="takeInsurance()" [disabled]="bankroll() < insuranceCost()">Assurance ({{ insuranceCost() }})</button>
+        <button class="sec" (click)="declineInsurance()">Non merci</button>
       }
       @case ('player') {
         <button (click)="hit()">Tirer</button>
         <button (click)="stand()">Rester</button>
-        <button (click)="double()" [disabled]="!canDouble()">Doubler</button>
+        @if (canDouble()) { <button class="alt" (click)="double()">Doubler</button> }
+        @if (canSplit()) { <button class="alt" (click)="split()">Séparer</button> }
+        @if (canSurrender()) { <button class="sec" (click)="surrender()">Abandonner</button> }
+      }
+      @case ('dealer') {
+        <span class="mise">Le croupier joue…</span>
       }
       @case ('done') {
         <button (click)="newRound()">Nouvelle donne</button>
       }
     }
   </div>
-
-  @if (hint()) {
-    <div class="hint">Conseil (stratégie de base) : <b>{{ hint() }}</b></div>
-  }
 </div>
+
+<!-- Confettis -->
+@if (confetti()) {
+  <div class="confetti">
+    @for (p of confettiPieces; track $index) {
+      <span [style.left.%]="p.left" [style.animation-delay.ms]="p.delay" [style.animation-duration.ms]="p.dur">{{ p.emoji }}</span>
+    }
+  </div>
+}
+
+<!-- Réglages -->
+@if (showSettings()) {
+  <div class="overlay" (click)="toggleSettings()">
+    <div class="reglages panneau" (click)="$event.stopPropagation()">
+      <div class="reg-tete">
+        <h2>⚙️ Réglages</h2>
+        <button class="ico" (click)="toggleSettings()">✕</button>
+      </div>
+
+      <label>Sons
+        <button class="tgl" [class.on]="cfg().sounds" (click)="updateCfg({ sounds: !cfg().sounds })">{{ cfg().sounds ? 'Activés' : 'Coupés' }}</button>
+      </label>
+      <label>Confettis
+        <button class="tgl" [class.on]="cfg().confetti" (click)="updateCfg({ confetti: !cfg().confetti })">{{ cfg().confetti ? 'Activés' : 'Coupés' }}</button>
+      </label>
+      <label>Vitesse
+        <div class="seg">
+          @for (o of speeds; track o) {
+            <button [class.on]="cfg().speed === o" (click)="updateCfg({ speed: o })">{{ o === 'slow' ? 'Lente' : o === 'normal' ? 'Normale' : 'Rapide' }}</button>
+          }
+        </div>
+      </label>
+
+      <div class="sep">Règles de la table <small>(à la prochaine donne)</small></div>
+
+      <label>Jeux dans le sabot
+        <div class="seg">
+          @for (o of [1, 2, 4, 6, 8]; track o) {
+            <button [class.on]="cfg().decks === o" (click)="updateCfg({ decks: o })">{{ o }}</button>
+          }
+        </div>
+      </label>
+      <label>Croupier sur 17 souple
+        <button class="tgl" [class.on]="cfg().dealerHitsSoft17" (click)="updateCfg({ dealerHitsSoft17: !cfg().dealerHitsSoft17 })">{{ cfg().dealerHitsSoft17 ? 'Tire (H17)' : 'Reste (S17)' }}</button>
+      </label>
+      <label>Blackjack paie
+        <div class="seg">
+          @for (o of payouts; track o) {
+            <button [class.on]="cfg().blackjackPays === o" (click)="updateCfg({ blackjackPays: o })">{{ o }}</button>
+          }
+        </div>
+      </label>
+      <label>Double après séparation
+        <button class="tgl" [class.on]="cfg().doubleAfterSplit" (click)="updateCfg({ doubleAfterSplit: !cfg().doubleAfterSplit })">{{ cfg().doubleAfterSplit ? 'Oui' : 'Non' }}</button>
+      </label>
+      <label>Abandon autorisé
+        <button class="tgl" [class.on]="cfg().surrender" (click)="updateCfg({ surrender: !cfg().surrender })">{{ cfg().surrender ? 'Oui' : 'Non' }}</button>
+      </label>
+      <label>Séparations max
+        <div class="seg">
+          @for (o of [1, 2, 3]; track o) {
+            <button [class.on]="cfg().maxSplits === o" (click)="updateCfg({ maxSplits: o })">{{ o }}</button>
+          }
+        </div>
+      </label>
+    </div>
+  </div>
+}

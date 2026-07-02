@@ -6,11 +6,40 @@ export interface Profile {
   title: string;
 }
 
+export type BlackjackPayout = '3:2' | '6:5';
+
 export interface Settings {
   sounds: boolean;
   speed: 'slow' | 'normal' | 'fast';
   theme: string;
   confetti: boolean;
+  /** Nombre de jeux dans le sabot. */
+  decks: number;
+  /** Le croupier tire sur 17 souple (H17) plutôt que de rester (S17). */
+  dealerHitsSoft17: boolean;
+  /** Paiement d'un blackjack naturel. */
+  blackjackPays: BlackjackPayout;
+  /** Doubler après une séparation autorisé. */
+  doubleAfterSplit: boolean;
+  /** Abandon tardif autorisé (première décision d'une main de 2 cartes). */
+  surrender: boolean;
+  /** Nombre maximum de séparations (3 ⇒ jusqu'à 4 mains). */
+  maxSplits: number;
+}
+
+export function defaultSettings(): Settings {
+  return {
+    sounds: true,
+    speed: 'normal',
+    theme: 'classic',
+    confetti: true,
+    decks: 6,
+    dealerHitsSoft17: false,
+    blackjackPays: '3:2',
+    doubleAfterSplit: true,
+    surrender: true,
+    maxSplits: 3,
+  };
 }
 
 export interface Progression {
