@@ -6,6 +6,15 @@
 
 L'appli est en ligne : https://github.com/lucasguerin00/blackjack-royale
 
+## ✅ Fait le 2026-07-06
+
+- **Écran Statistiques** (`/stats`) : sélecteur session / all-time, taux de victoire + jauge,
+  net & rendement, grille de KPI (mains, V/D/égalités, blackjacks, séries, EV perdue), état vide,
+  reset par portée. Page smart + dumb `StatsPanel`.
+- **Écran Profil** (`/profil`) : aperçu live, édition du nom (fini le `prompt()`), sélecteur
+  d'avatar et de titre. Page smart + dumb `ProfileEditor` ; `ProfileService.setAvatar` + liste de titres.
+- Tuiles Statistiques & Profil **débloquées** dans le lobby, routes branchées.
+
 ## ✅ Fait le 2026-07-02
 
 - Table complète : **split multi-mains, assurance, abandon, double**, écran de réglages.
@@ -23,10 +32,9 @@ L'appli est en ligne : https://github.com/lucasguerin00/blackjack-royale
 
 ## Phase 0 — Fondations & qualité (à faire en premier)
 
-- [ ] 🟢 **Unifier la bankroll.** Le mode Classique utilise sa propre clé `bj_free_bankroll`
-      ([classique.ts:24](src/app/features/classique/classique.ts#L24)) alors que
-      `ProgressionService` gère déjà `bankroll` ([progression.service.ts:15](src/app/core/services/progression.service.ts#L15)).
-      → Une seule source de vérité, via `ProgressionService`.
+- [x] 🟢 **Unifier la bankroll.** Fait : `ClassiqueGame` lit/écrit directement
+      `ProgressionService.bankroll` ([classique-game.ts:42](src/app/features/classique/services/classique-game.ts#L42)) —
+      source de vérité unique partagée avec le lobby.
 - [ ] 🟡 **Tests unitaires du moteur** (`cards`, `shoe`, `strategy`) — code pur, idéal à tester :
       valeur de main, As souple/dur, blackjack, table de stratégie, remélange du sabot.
 - [ ] 🟢 **Corriger le README** (actuellement le template Angular CLI par défaut) : décrire le vrai projet,
@@ -36,20 +44,19 @@ L'appli est en ligne : https://github.com/lucasguerin00/blackjack-royale
 
 ## Phase 1 — Gameplay solo complet
 
-- [ ] 🟡 **Split (séparation de paires).** La table `PAIRS` existe déjà
-      ([strategy.ts:38](src/app/core/engine/strategy.ts#L38)) mais `canSplit` est toujours `false`
-      ([classique.ts:42](src/app/features/classique/classique.ts#L42)). Gérer plusieurs mains en parallèle.
-- [ ] 🟡 **Assurance** quand le croupier montre un As.
-- [ ] 🟢 **Abandon (surrender)**.
-- [ ] 🟢 **Animations de distribution** + son (flip de carte, jetons) pour le feeling casino.
-- [ ] 🟢 **Remplacer `prompt()`** pour l'édition du nom ([lobby.ts:43](src/app/features/lobby/lobby.ts#L43)) par une vraie modale.
-- [ ] 🟢 **Écran de réglages** : nombre de jeux, règle croupier (S17/H17), payout blackjack (3:2 / 6:5).
+- [x] 🟡 **Split (séparation de paires).** Fait : mains multiples gérées par `ClassiqueGame`.
+- [x] 🟡 **Assurance** quand le croupier montre un As. Fait.
+- [x] 🟢 **Abandon (surrender)**. Fait.
+- [x] 🟢 **Animations de distribution** + son (flip de carte, jetons). Fait (Web Audio + confettis).
+- [x] 🟢 **Remplacer `prompt()`** pour l'édition du nom. Fait : le bouton « modifier » du lobby
+      ouvre l'écran Profil (`/profil`), plus aucun `prompt()`.
+- [x] 🟢 **Écran de réglages** : nombre de jeux, règle croupier (S17/H17), payout (3:2 / 6:5). Fait.
 
 ## Phase 2 — Étoffer les modes (aujourd'hui placeholders)
 
-- [ ] 🟡 **Statistiques** : le `StatsService` collecte déjà tout (session + all-time). Construire l'écran réel
-      (winrate, net, meilleure/pire main, streak) — brancher [la route `stats`](src/app/app.routes.ts#L38).
-- [ ] 🟢 **Profil** : avatar, nom, titre, réglages (le `ProfileService` existe déjà).
+- [x] 🟡 **Statistiques** : écran réel branché sur `StatsService` (session / all-time, winrate,
+      net & rendement, séries, EV perdue, état vide, reset). Fait le 2026-07-06.
+- [x] 🟢 **Profil** : avatar, nom éditable, titre. Fait le 2026-07-06 (écran `/profil`).
 - [ ] 🟡 **Comptage** : `hiLo()` est déjà écrit ([cards.ts:40](src/app/core/engine/cards.ts#L40)).
       Entraîneur Hi-Lo, drills notés, jauge de « true count ».
 - [ ] 🟡 **Coach & Probas** : `recommend()` donne déjà le coup optimal

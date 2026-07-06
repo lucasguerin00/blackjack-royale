@@ -38,14 +38,13 @@ export const routes: Routes = [
   },
   {
     path: 'stats',
-    loadComponent: () => import('./features/placeholder/placeholder').then((m) => m.Placeholder),
-    data: { mode: 'Statistiques', icon: '📊' },
+    loadComponent: () => import('./features/stats/pages/stats/stats.page').then((m) => m.StatsPage),
     title: 'Statistiques — Blackjack Royale',
   },
   {
     path: 'profil',
-    loadComponent: () => import('./features/placeholder/placeholder').then((m) => m.Placeholder),
-    data: { mode: 'Profil', icon: '🙂' },
+    loadComponent: () =>
+      import('./features/profil/pages/profil/profil.page').then((m) => m.ProfilPage),
     title: 'Profil — Blackjack Royale',
   },
   { path: '**', redirectTo: '' },

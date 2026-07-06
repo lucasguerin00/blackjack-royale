@@ -1,0 +1,74 @@
+<p-card>
+  <!-- Aperçu live : avatar, nom et titre courants -->
+  <div class="flex items-center gap-4">
+    <p-avatar [label]="profile().avatar" size="xlarge" shape="circle" class="text-3xl" />
+    <div>
+      <div class="text-xl font-extrabold">{{ profile().name }}</div>
+      <div class="text-[13px] tracking-wide text-amber-400">{{ profile().title }}</div>
+    </div>
+  </div>
+
+  <p-divider />
+
+  <!-- Nom : saisie libre (max 20), validée à l'Entrée ou au bouton -->
+  <label for="profile-name" class="mb-2 block text-xs uppercase tracking-[2px] text-emerald-200/60"
+    >Nom</label
+  >
+  <div class="flex flex-wrap items-center gap-2">
+    <input
+      pInputText
+      id="profile-name"
+      type="text"
+      maxlength="20"
+      class="flex-1"
+      [value]="profile().name"
+      #nameInput
+      (keyup.enter)="nameChanged.emit(nameInput.value)"
+    />
+    <p-button
+      label="Enregistrer"
+      icon="pi pi-check"
+      (onClick)="nameChanged.emit(nameInput.value)"
+    />
+  </div>
+
+  <p-divider />
+
+  <!-- Avatar : palette cliquable, la sélection courante est mise en évidence -->
+  <div class="mb-2 text-xs uppercase tracking-[2px] text-emerald-200/60">Avatar</div>
+  <div class="flex flex-wrap gap-2">
+    @for (a of avatars(); track a) {
+      <button
+        type="button"
+        class="flex h-12 w-12 items-center justify-center rounded-xl border bg-black/25 text-2xl transition hover:scale-105"
+        [class]="
+          a === profile().avatar ? 'border-amber-400 ring-2 ring-amber-400/60' : 'border-white/10'
+        "
+        (click)="avatarChanged.emit(a)"
+      >
+        {{ a }}
+      </button>
+    }
+  </div>
+
+  <p-divider />
+
+  <!-- Titre : liste de libellés décoratifs, la sélection courante est active -->
+  <div class="mb-2 text-xs uppercase tracking-[2px] text-emerald-200/60">Titre</div>
+  <div class="flex flex-wrap gap-2">
+    @for (t of titles(); track t) {
+      <button
+        type="button"
+        class="rounded-full border px-3 py-1.5 text-sm transition hover:scale-105"
+        [class]="
+          t === profile().title
+            ? 'border-amber-400 bg-amber-400/15 text-amber-300'
+            : 'border-white/10 bg-black/25 text-emerald-100/80'
+        "
+        (click)="titleChanged.emit(t)"
+      >
+        {{ t }}
+      </button>
+    }
+  </div>
+</p-card>

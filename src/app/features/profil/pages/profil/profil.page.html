@@ -1,0 +1,19 @@
+<!-- Barre supérieure : retour au lobby -->
+<div class="mx-auto flex max-w-[720px] items-center px-[18px] pt-3.5">
+  <p-button label="← Accueil" severity="secondary" [text]="true" (onClick)="back()" />
+</div>
+
+<div class="mx-auto max-w-[720px] px-[18px] pb-16 pt-4">
+  <!-- Titre -->
+  <h1 class="mb-5 text-[28px] font-bold text-amber-400">🙂 Profil</h1>
+
+  <!-- Éditeur : reçoit le profil et les palettes, émet les modifications -->
+  <app-profile-editor
+    [profile]="profile()"
+    [avatars]="avatars"
+    [titles]="titles"
+    (nameChanged)="onName($event)"
+    (avatarChanged)="onAvatar($event)"
+    (titleChanged)="onTitle($event)"
+  />
+</div>

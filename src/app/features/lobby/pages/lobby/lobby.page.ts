@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, Signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { ProfileService } from '../../../../core/services/profile.service';
 import { ProgressionService } from '../../../../core/services/progression.service';
 import { ModeTile } from '../../models/mode-tile.model';
@@ -20,6 +21,7 @@ import { ProfileSummary } from '../../components/profile-summary/profile-summary
 export class LobbyPage {
   private readonly profileSvc = inject(ProfileService);
   private readonly progSvc = inject(ProgressionService);
+  private readonly router = inject(Router);
 
   // État de progression exposé au template.
   protected readonly profile = this.profileSvc.profile;
@@ -72,14 +74,14 @@ export class LobbyPage {
       name: 'Statistiques',
       desc: 'KPI, session vs all-time.',
       path: '/stats',
-      available: false,
+      available: true,
     },
     {
       icon: '🙂',
       name: 'Profil',
       desc: 'Avatar, nom, titre, réglages.',
       path: '/profil',
-      available: false,
+      available: true,
     },
   ];
 
@@ -88,9 +90,8 @@ export class LobbyPage {
     this.profileSvc.cycleAvatar();
   }
 
-  /** Édite le nom du joueur (invite navigateur, provisoire). */
+  /** Ouvre l'écran Profil pour éditer nom, avatar et titre. */
   protected editName(): void {
-    const name = prompt('Ton nom de joueur :', this.profile().name);
-    if (name) this.profileSvc.setName(name);
+    this.router.navigate(['/profil']);
   }
 }
