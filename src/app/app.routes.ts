@@ -14,8 +14,8 @@ export const routes: Routes = [
   },
   {
     path: 'carriere',
-    loadComponent: () => import('./features/placeholder/placeholder').then((m) => m.Placeholder),
-    data: { mode: 'Carrière', icon: '🎰' },
+    loadComponent: () =>
+      import('./features/carriere/pages/carriere/carriere.page').then((m) => m.CarrierePage),
     title: 'Carrière — Blackjack Royale',
   },
   {

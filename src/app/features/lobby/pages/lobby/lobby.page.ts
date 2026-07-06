@@ -44,9 +44,9 @@ export class LobbyPage {
     {
       icon: '🎰',
       name: 'Carrière',
-      desc: 'Tables à paliers, prestige, jetons, IA et ambiance casino.',
+      desc: 'Gravis les salons, du tripot au palace royal.',
       path: '/carriere',
-      available: false,
+      available: true,
     },
     {
       icon: '🕵️',

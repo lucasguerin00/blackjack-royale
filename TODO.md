@@ -14,6 +14,13 @@ L'appli est en ligne : https://github.com/lucasguerin00/blackjack-royale
 - **Écran Profil** (`/profil`) : aperçu live, édition du nom (fini le `prompt()`), sélecteur
   d'avatar et de titre. Page smart + dumb `ProfileEditor` ; `ProfileService.setAvatar` + liste de titres.
 - Tuiles Statistiques & Profil **débloquées** dans le lobby, routes branchées.
+- **Polish table Classique** : distribution échelonnée (P→D→P→D), cartes sortant du sabot,
+  flip 3D croupier, feutre + sabot décoratif, conseil du coach affiché.
+- **Carrière — hub d'ascension** (`/carriere`) : timeline de 6 salons (tripot → palace),
+  déblocage par **fortune record** (`CareerService`, cliquet persistant → perdre ne reverrouille pas),
+  bandeau de fortune + progression vers le prochain salon, UI type « Monopoly Poker ».
+  → Reste (étape 2) : appliquer les **mises min/max & règles du salon** à la table quand on entre,
+  et un **buy-in** (puits de dépense) pour renforcer la valeur de l'argent.
 
 ## ✅ Fait le 2026-07-02
 
@@ -61,7 +68,9 @@ L'appli est en ligne : https://github.com/lucasguerin00/blackjack-royale
       Entraîneur Hi-Lo, drills notés, jauge de « true count ».
 - [ ] 🟡 **Coach & Probas** : `recommend()` donne déjà le coup optimal
       ([strategy.ts:68](src/app/core/engine/strategy.ts#L68)). Afficher EV perdue et conseils en direct.
-- [ ] 🔴 **Carrière** : tables à paliers, prestige, comps, ambiance casino.
+- [~] 🔴 **Carrière** : tables à paliers, prestige, comps, ambiance casino.
+  Hub d'ascension fait (déblocage par fortune record). Reste : mises/règles par salon
+  appliquées à la table + buy-in, puis comps/prestige.
 - [ ] 🔴 **Roguelike** : runs, jokers/reliques, boss dealers.
 
 ## Phase 3 — 🚀 Déploiement (mettre l'appli en ligne tôt)
@@ -90,6 +99,7 @@ L'appli est en ligne : https://github.com/lucasguerin00/blackjack-royale
 ---
 
 ### Idées bonus
+
 - [ ] Thèmes de table / dos de cartes déblocables.
 - [ ] Défis quotidiens.
 - [ ] i18n (FR/EN) — l'UI est en français aujourd'hui.

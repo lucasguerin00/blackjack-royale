@@ -1,0 +1,84 @@
+<!-- Barre supérieure : retour au lobby -->
+<div class="mx-auto flex max-w-[760px] items-center px-[18px] pt-3.5">
+  <p-button label="← Accueil" severity="secondary" [text]="true" (onClick)="back()" />
+</div>
+
+<div class="mx-auto max-w-[760px] px-[18px] pb-16 pt-3">
+  <!-- Bandeau de fortune : identité, solde, fortune record et progression -->
+  <section
+    class="relative overflow-hidden rounded-3xl border border-amber-400/40 p-5 shadow-2xl bg-[radial-gradient(ellipse_at_top,#1a2a22_0%,#0c1611_70%)]"
+  >
+    <!-- Lueur dorée en fond -->
+    <span
+      class="pointer-events-none absolute -right-16 -top-16 h-52 w-52 rounded-full bg-amber-400/10 blur-3xl"
+    ></span>
+
+    <div class="relative">
+      <!-- Ligne titre : joueur + solde -->
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <!-- Identité -->
+        <div class="flex items-center gap-3">
+          <p-avatar [label]="profile().avatar" size="large" shape="circle" class="text-2xl" />
+          <div>
+            <div class="text-lg font-extrabold text-white">{{ profile().name }}</div>
+            <div class="text-xs text-amber-300">Niveau {{ level() }} · {{ profile().title }}</div>
+          </div>
+        </div>
+        <!-- Solde courant -->
+        <div class="text-right">
+          <div class="text-[10px] uppercase tracking-[3px] text-emerald-200/60">Fortune</div>
+          <div class="text-3xl font-extrabold text-amber-400">{{ fmt(bankroll()) }} 🪙</div>
+          <div class="text-[11px] text-emerald-200/60">
+            Record : {{ fmt(peak()) }} · {{ unlockedCount() }}/{{ venues.length }} salons
+          </div>
+        </div>
+      </div>
+
+      <!-- Progression vers le prochain salon -->
+      <div class="mt-5">
+        @if (next(); as n) {
+          <div class="mb-1.5 flex items-center justify-between text-xs">
+            <span class="text-emerald-100/80">
+              Prochaine étape : <b class="text-white">{{ n.icon }} {{ n.name }}</b>
+            </span>
+            <span class="text-amber-300"
+              >encore <b>{{ fmt(nextRemaining()) }}</b> 🪙</span
+            >
+          </div>
+          <!-- Jauge vers le prochain seuil -->
+          <div class="h-3 overflow-hidden rounded-full bg-black/40">
+            <div
+              class="h-full rounded-full bg-gradient-to-r from-amber-500 via-amber-300 to-amber-400 transition-all"
+              [style.width.%]="nextProgress()"
+            ></div>
+          </div>
+        } @else {
+          <!-- Tous les salons débloqués -->
+          <div
+            class="rounded-xl border border-amber-400/30 bg-amber-400/10 px-4 py-3 text-center text-sm font-semibold text-amber-200"
+          >
+            👑 Empire complet — vous avez conquis tous les salons. Une légende.
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Titre de section -->
+  <h2 class="mb-4 mt-8 text-center text-xs uppercase tracking-[4px] text-emerald-200/60">
+    Votre ascension
+  </h2>
+
+  <!-- Timeline des salons, du plus modeste au plus prestigieux -->
+  <div>
+    @for (venue of venues; track venue.id) {
+      <app-venue-card
+        [venue]="venue"
+        [unlocked]="isUnlocked(venue)"
+        [isNext]="next()?.id === venue.id"
+        [peak]="peak()"
+        (enter)="enter(venue)"
+      />
+    }
+  </div>
+</div>
