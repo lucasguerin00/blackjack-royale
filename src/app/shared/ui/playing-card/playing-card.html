@@ -1,21 +1,35 @@
 @if (faceDown()) {
+  <!-- Dos de carte : liseré blanc + motif croisillon et emblème central -->
   <div
-    class="relative h-[100px] w-[70px] select-none rounded-lg border-2 border-white/90 shadow-lg bg-[repeating-linear-gradient(45deg,#7b1113_0_6px,#9c1a1d_6px_12px)]"
+    class="pc-deal relative h-[100px] w-[70px] select-none overflow-hidden rounded-lg border-2 border-white/90 shadow-lg bg-[repeating-linear-gradient(45deg,#7b1113_0_6px,#9c1a1d_6px_12px)]"
+    [style.animation-delay]="delayMs() + 'ms'"
   >
-    <span class="absolute inset-0 flex items-center justify-center text-4xl text-white/40">♠</span>
+    <span class="absolute inset-1.5 rounded-md border border-white/25"></span>
+    <span class="absolute inset-0 flex items-center justify-center text-3xl text-white/45">♦</span>
   </div>
 } @else if (card(); as c) {
+  <!-- Face visible : coins haut-gauche / bas-droit + grande enseigne centrale -->
   <div
-    class="relative h-[100px] w-[70px] select-none rounded-lg border border-black/10 bg-stone-50 shadow-lg"
+    class="relative h-[100px] w-[70px] select-none rounded-lg border border-black/10 bg-gradient-to-br from-white to-stone-100 shadow-lg ring-1 ring-black/5"
     [class.pc-deal]="animation() === 'deal'"
     [class.pc-flip]="animation() === 'flip'"
     [class.text-red-600]="red()"
     [class.text-neutral-900]="!red()"
+    [style.animation-delay]="delayMs() + 'ms'"
   >
-    <span class="absolute left-2 top-1.5 text-lg font-extrabold leading-none">{{ c.rank }}</span>
+    <!-- Coin supérieur gauche : rang + enseigne -->
+    <span class="absolute left-1.5 top-1 flex flex-col items-center leading-none">
+      <span class="text-lg font-extrabold">{{ c.rank }}</span>
+      <span class="text-xs">{{ c.suit }}</span>
+    </span>
+    <!-- Enseigne centrale -->
     <span class="absolute inset-0 flex items-center justify-center text-3xl opacity-90">{{
       c.suit
     }}</span>
-    <span class="absolute bottom-1.5 right-2 text-2xl">{{ c.suit }}</span>
+    <!-- Coin inférieur droit (pivoté à 180°) -->
+    <span class="absolute bottom-1 right-1.5 flex rotate-180 flex-col items-center leading-none">
+      <span class="text-lg font-extrabold">{{ c.rank }}</span>
+      <span class="text-xs">{{ c.suit }}</span>
+    </span>
   </div>
 }

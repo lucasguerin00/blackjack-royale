@@ -1,8 +1,12 @@
 <p-card class="block rounded-xl transition {{ stateClass() }}">
-  <!-- Cartes de la main -->
+  <!-- Cartes de la main (délai échelonné sur la donne initiale, immédiat ensuite) -->
   <div class="flex min-h-[100px] justify-center">
     @for (card of hand().cards; track $index) {
-      <app-playing-card class="-ml-5 block first:ml-0" [card]="card" />
+      <app-playing-card
+        class="-ml-5 block first:ml-0"
+        [card]="card"
+        [delayMs]="$index < 2 ? $index * 240 : 0"
+      />
     }
   </div>
 

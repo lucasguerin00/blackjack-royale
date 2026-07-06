@@ -18,4 +18,16 @@
       />
     }
   </div>
+
+  <!-- Conseil de stratégie de base (masqué si aucun) -->
+  @if (hint()) {
+    <div
+      class="flex items-center gap-1.5 rounded-full border border-amber-400/30 bg-black/25 px-3 py-1 text-xs text-emerald-100/90"
+    >
+      <i class="pi pi-lightbulb text-amber-400"></i>
+      <span
+        >Conseil : <b class="text-amber-300">{{ hint() }}</b></span
+      >
+    </div>
+  }
 </div>

@@ -9,16 +9,22 @@
     }
   </div>
 
-  <!-- Cartes : la première est retournée face cachée avant la révélation -->
+  <!-- Cartes : la première est retournée face cachée avant la révélation.
+       Le délai échelonne la donne initiale (intercalée avec le joueur : D après P). -->
   <div class="flex min-h-[100px] justify-center">
     @for (card of cards(); track $index) {
       @if ($index === 0 && !revealed()) {
-        <app-playing-card class="-ml-5 block first:ml-0" [faceDown]="true" />
+        <app-playing-card
+          class="-ml-5 block first:ml-0"
+          [faceDown]="true"
+          [delayMs]="$index < 2 ? 120 + $index * 240 : 0"
+        />
       } @else {
         <app-playing-card
           class="-ml-5 block first:ml-0"
           [card]="card"
           [animation]="$index === 0 ? 'flip' : 'deal'"
+          [delayMs]="$index < 2 ? 120 + $index * 240 : 0"
         />
       }
     }

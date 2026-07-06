@@ -34,6 +34,8 @@ export class PlayingCard {
   readonly faceDown: InputSignal<boolean> = input(false);
   /** Animation d'entrée jouée à l'insertion. */
   readonly animation: InputSignal<CardAnimation> = input<CardAnimation>('deal');
+  /** Décalage d'entrée en millisecondes (pour échelonner une distribution). */
+  readonly delayMs: InputSignal<number> = input<number>(0);
 
   /** Vrai si la carte est d'une couleur rouge (cœur/carreau). */
   protected readonly red: Signal<boolean> = computed(() => {
